@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 
 const connection = new Pool({
-  user: 'rs17',
+  user: 'postgres',
   host: 'localhost', // o la dirección de tu servidor PostgreSQL
   database: 'cognitivedb',
   password: 'root',

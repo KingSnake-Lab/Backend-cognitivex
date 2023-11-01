@@ -6,7 +6,7 @@ function generarTokenID() {
 }
 
 
-//Agregar paciente nuevo
+/////////////////////////////////////////////////////    Agregar paciente nuevo
 async function AgregarPaciente(req, res, data, uid) {
   const PID = generarTokenID();
   //agregar en tabla de pacientes
@@ -68,7 +68,49 @@ async function AgregarPaciente(req, res, data, uid) {
 
 }
 
-//Editar paciente nuevo
+async function EditarPaciente(req, res, pid, newData) {
+  // Realiza la actualización en la tabla "paciente" utilizando el PID proporcionado
+  const scriptPaciente = 'UPDATE "paciente" SET "nombre" = $1, "apellidop" = $2, "apellidom" = $3, "genero" = $4, "direccion" = $5, "telefono" = $6, "fechaingreso" = $7, "fechanacimiento" = $8 WHERE "pid" = $9';
+
+  try {
+    await connection.query(scriptPaciente, [
+      newData.Nombre,
+      newData.ApellidoP,
+      newData.ApellidoM,
+      newData.Genero,
+      newData.Direccion,
+      newData.Telefono,
+      newData.FechaIngreso,
+      newData.FechaNacimiento,
+      pid
+    ]);
+
+    // Realiza la actualización en la tabla "infosocial" utilizando el PID proporcionado
+    const scriptSocial = 'UPDATE "infosocial" SET "niveleducativo" = $1, "profesion" = $2, "estadocivil" = $3 WHERE "pid" = $4';
+    await connection.query(scriptSocial, [
+      newData.NivelEducativo,
+      newData.Profesion,
+      newData.EstadoCivil,
+      pid
+    ]);
+
+    // Realiza la actualización en la tabla "infomedica" utilizando el PID proporcionado
+    const scriptMedica = 'UPDATE "infomedica" SET "enfermedades" = $1, "alergias" = $2, "antecedentes" = $3, "medicamentos" = $4 WHERE "pid" = $5';
+    await connection.query(scriptMedica, [
+      newData.Enfermedades,
+      newData.Alergias,
+      newData.Antecedentes,
+      newData.Medicamentos,
+      pid
+    ]);
+
+    console.log('OK -> Paciente actualizado');
+    res.status(200).json({ mensaje: 'Paciente actualizado' });
+  } catch (error) {
+    console.error('Error de servidor', error);
+    res.status(500).json({ error: 'Ocurrió un error' });
+  }
+}
 
 //Eliminar paciente 
 async function EliminarPaciente(req, res, id) {
@@ -95,6 +137,7 @@ async function GetTablePacientes(req, res, uid) {
   try {
     // Modifica la consulta SQL para filtrar por el valor de uid
     const result = await connection.query('SELECT * FROM paciente WHERE uid = $1', [uid]);
+    console.log('Obteniendo pacientes (OK)');
     res.json(result.rows); // Devuelve los datos de la tabla como un JSON
   } catch (error) {
     console.error('Error al obtener la tabla de pacientes:', error);
@@ -104,5 +147,5 @@ async function GetTablePacientes(req, res, uid) {
 
 
 module.exports = {
-  AgregarPaciente, GetTablePacientes, EliminarPaciente
+  AgregarPaciente, GetTablePacientes, EliminarPaciente, EditarPaciente
 };

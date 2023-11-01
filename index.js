@@ -16,21 +16,45 @@ app.use(session({
 
 ////////////////////////////////////////////////////////////////////////////////////////// IMPORTS FUNCTIONS
 const globalUID = require('./globalUID'); 
-const {AddNewUser } = require('./Usuarios/functionUsuarios');
-const { AgregarPaciente, GetTablePacientes, EliminarPaciente } = require('./Pacientes/functionsPacientes');
+const {AddNewUser, ObtenerUsuarios, EliminarUsuario, ActualizarUsuario } = require('./Usuarios/functionUsuarios');
+const { AgregarPaciente, GetTablePacientes, EliminarPaciente, EditarPaciente } = require('./Pacientes/functionsPacientes');
 const { Login, getUID } = require('./Login/functionsLogin');
 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////// ENDPOINTS usuarios
 
-// Ruta para registrar un paciente
+// Ruta para registrar un usuario
 app.post('/api/usuarios/add', async (req, res) => {
   const data = req.body;
   //console.log(data);
   const uid = globalUID.getGlobalUid();
   AddNewUser(req, res, data, uid);
 });
+
+// Ruta para eliminar un usuario por UID
+app.delete('/api/usuarios/delete/:uid', async (req, res) => {
+  const uid = req.params.uid; // Obtiene el UID de la URL
+  // Llama a una función para eliminar el usuario
+
+  EliminarUsuario(req, res, uid);
+});
+
+// Ruta para actualizar un usuario por UID
+app.put('/api/usuarios/update/:uid', async (req, res) => {
+  const uid = req.params.uid; // Obtiene el UID de la URL
+  const newData = req.body; // Obtiene los datos actualizados del usuario desde el cuerpo de la solicitud
+  console.log(newData);
+  // Llama a una función para actualizar el usuario
+  ActualizarUsuario(req, res, uid, newData);
+});
+
+// Ruta para obtener todos los usuarios
+app.get('/api/usuarios/all', async (req, res) => {
+  // Llama a una función para obtener todos los usuarios
+  ObtenerUsuarios(req, res);
+});
+
 
 ////////////////////////////////////////////////////////////////////////////////////////// ENDPOINTS PACIENTES
 // Ruta para registrar un paciente
@@ -54,6 +78,15 @@ app.delete('/api/paciente/delete/:id', async (req, res) => {
   console.log(id);
   // Luego, puedes utilizar el ID para eliminar al paciente, por ejemplo:
   EliminarPaciente(req, res, id);
+});
+
+// Ruta para editar un paciente por PID
+app.put('/api/paciente/edit/:pid', async (req, res) => {
+  const pid = req.params.pid; // Obtiene el PID de la URL
+  const newData = req.body; // Obtiene los datos actualizados del paciente desde el cuerpo de la solicitud
+  
+  // Llama a una función para editar el paciente
+  EditarPaciente(req, res, pid, newData);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////// ENDPOINTS login
