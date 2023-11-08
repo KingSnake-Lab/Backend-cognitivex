@@ -78,4 +78,6 @@ CREATE TABLE infoMedica (
 INSERT INTO usuarios (UID, Email, Password, Nombre, ApellidoP, ApellidoM, Telefono, Genero, Cargo, Especialidad)
 VALUES ('shsbjhdb', 'ejemplo@root.com', 'root', 'Juan', 'Pérez', 'Gómez', '555-123-4567', 'Masculino', 'Gerente', 'Ingeniería');
 
+CREATE USER rs17 WITH PASSWORD 'root';
+
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO rs17;
