@@ -20,7 +20,34 @@ const {AddNewUser, ObtenerUsuarios, EliminarUsuario, ActualizarUsuario } = requi
 const { AgregarPaciente, GetTablePacientes, EliminarPaciente, EditarPaciente } = require('./Pacientes/functionsPacientes');
 const { Login, getUID } = require('./Login/functionsLogin');
 
+const {AddNewRutina, ObtenerRutinas, ActualizarRutina, EliminarRutina} = require('./Rutinas/functionRutinas');
 
+// Ruta para agregar una nueva rutina
+app.post('/api/rutinas/add', async (req, res) => {
+  const data = req.body;
+  const uid = globalUID.getGlobalUid();
+  AddNewRutina(req, res, data, uid);
+});
+
+// Ruta para eliminar una rutina por RID
+app.delete('/api/rutinas/delete/:rid', async (req, res) => {
+  const rid = req.params.rid;
+  console.log(rid);
+  EliminarRutina(req, res, rid);
+});
+
+// Ruta para actualizar una rutina por RID
+app.put('/api/rutinas/update/:rid', async (req, res) => {
+  const rid = req.params.rid;
+  const newData = req.body;
+  const uid = globalUID.getGlobalUid();
+  ActualizarRutina(req, res, rid, newData, uid);
+});
+
+// Ruta para obtener todas las rutinas
+app.get('/api/rutinas/all', async (req, res) => {
+  ObtenerRutinas(req, res);
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////// ENDPOINTS usuarios
 

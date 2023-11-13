@@ -31,8 +31,8 @@ CREATE TABLE rutina (
   Nombre varchar(255),
   Descripcion varchar(255),
   FechaCreacion date,
-  PropietarioID varchar(255),
-  IDActividades varchar(255)
+  Propietario varchar(255),
+  Instruccions varchar(255)
 );
 
 -- Crear la tabla 'actividades'
