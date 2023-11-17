@@ -17,7 +17,7 @@ async function AddNewRutina(req, res, data, propietario) {
       new Date(), // Fecha de creación actual
       propietario,
       data.Instruccions
-    ]);
+    ]); 
     console.log('Nueva rutina agregada con RID: ' + rid);
     res.status(201).json({ mensaje: 'Rutina agregada' });
   } catch (error) {

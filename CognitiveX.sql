@@ -75,6 +75,16 @@ CREATE TABLE infoMedica (
 );
 
 
+-- Crear la tabla 'estadisticas'
+CREATE TABLE estadisticas (
+  EID varchar(255),
+  PID varchar(255),
+  RID varchar(255),
+  Tiempo int,
+  Aciertos int,
+  Errores int
+);
+
 INSERT INTO usuarios (UID, Email, Password, Nombre, ApellidoP, ApellidoM, Telefono, Genero, Cargo, Especialidad)
 VALUES ('shsbjhdb', 'ejemplo@root.com', 'root', 'Juan', 'Pérez', 'Gómez', '555-123-4567', 'Masculino', 'Gerente', 'Ingeniería');
 

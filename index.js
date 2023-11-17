@@ -22,6 +22,29 @@ const { Login, getUID } = require('./Login/functionsLogin');
 
 const {AddNewRutina, ObtenerRutinas, ActualizarRutina, EliminarRutina} = require('./Rutinas/functionRutinas');
 
+const {AddStats, ObtenerStats, EliminarStats} = require('./Estadisticas/functionEstadisticas');
+
+
+// Ruta para agregar una nueva estadistica
+app.post('/api/stats/add', async (req, res) => {
+  const data = req.body;
+  const uid = globalUID.getGlobalUid();
+  AddStats(req, res, data);
+});
+
+// Ruta para eliminar una rutina por RID
+app.delete('/api/stats/delete/:rid', async (req, res) => {
+  const rid = req.params.rid;
+  console.log(rid);
+  EliminarStats(req, res, rid);
+});
+
+// Ruta para obtener todas las rutinas
+app.get('/api/stats/all', async (req, res) => {
+  ObtenerStats(req, res);
+});
+
+
 // Ruta para agregar una nueva rutina
 app.post('/api/rutinas/add', async (req, res) => {
   const data = req.body;
