@@ -77,12 +77,15 @@ CREATE TABLE infoMedica (
 
 -- Crear la tabla 'estadisticas'
 CREATE TABLE estadisticas (
-  EID varchar(255),
-  PID varchar(255),
-  RID varchar(255),
-  Tiempo int,
+  ID serial PRIMARY KEY,
+  Fecha date,
+  Tiempo float,
   Aciertos int,
-  Errores int
+  Errores int,
+  TiempoPromedio float,
+  Comentario varchar(255),
+  PID varchar(255),
+  RID varchar(255)
 );
 
 INSERT INTO usuarios (UID, Email, Password, Nombre, ApellidoP, ApellidoM, Telefono, Genero, Cargo, Especialidad)
