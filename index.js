@@ -22,7 +22,32 @@ const { Login, getUID } = require('./Login/functionsLogin');
 
 const {AddNewRutina, ObtenerRutinas, ActualizarRutina, EliminarRutina} = require('./Rutinas/functionRutinas');
 
-const {AddNewEstadistica, ObtenerEstats, EliminarStats} = require('./Estadisticas/functionEstadisticas');
+const {AddNewEstadistica, ObtenerEstats, EliminarStats, DatosParaGraficar, GetInfoPaciente, GetInfoSocial, GetInfoMedica} = require('./Estadisticas/functionEstadisticas');
+
+
+// Ruta para agregar una nueva estadística
+app.get('/api/estadisticas/social/:pid', async (req, res) => {
+  const pid = req.params.pid;
+  GetInfoSocial(req, res, pid);
+});
+// Ruta para agregar una nueva estadística
+app.get('/api/estadisticas/medica/:pid', async (req, res) => {
+  const pid = req.params.pid;
+  GetInfoMedica(req, res, pid);
+});
+
+// Ruta para agregar una nueva estadística
+app.get('/api/estadisticas/paciente/:pid', async (req, res) => {
+  const pid = req.params.pid;
+  GetInfoPaciente(req, res, pid);
+});
+
+// Ruta para agregar una nueva estadística
+app.get('/api/estadisticas/graphic', async (req, res) => {
+
+  DatosParaGraficar(req, res);
+});
+
 
 // Ruta para agregar una nueva estadística
 app.post('/api/estadisticas/add', async (req, res) => {

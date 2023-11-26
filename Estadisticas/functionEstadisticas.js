@@ -17,7 +17,7 @@ async function AddNewEstadistica(req, res, data) {
       data.Comentario,
       data.PID,
       data.RID
-    ]); 
+    ]);
     console.log('Nueva estadística agregada');
     res.status(201).json({ mensaje: 'Estadística agregada' });
   } catch (error) {
@@ -27,7 +27,7 @@ async function AddNewEstadistica(req, res, data) {
 }
 
 async function ObtenerEstats(req, res, pid) {
-  
+
   const script = 'SELECT * FROM estadisticas WHERE PID = $1';
 
   try {
@@ -59,7 +59,131 @@ async function EliminarStats(req, res, id) {
   }
 }
 
+//res.status(200).json(result.rows);
+async function DatosParaGraficar(req, res) {
+  let aciertos = '', errores = '', hombres = '', mujeres = '', rutinas = '';
+  /////////////////////////////////////////////////////////obtener aciertos y errores
+  const script = `
+    SELECT
+      SUM(aciertos) AS total_aciertos,
+      SUM(errores) AS total_errores
+    FROM estadisticas;`;
+
+  try {
+    const result = await connection.query(script);
+    aciertos = result.rows[0].total_aciertos;
+    errores = result.rows[0].total_errores;
+    /////////////////////////////////////////////////////////obtener hombres y mujeres
+    const script1 = `
+    SELECT
+  Genero,
+  COUNT(*) AS cantidad
+FROM paciente
+GROUP BY Genero;
+`;
+
+    try {
+      const result = await connection.query(script1);
+
+     //[ { genero: 'Masculino', cantidad: '1' } ]
+      if(result.rows.length > 1){
+        hombres = result.rows[0].cantidad;
+        mujeres = result.rows[1].cantidad;
+      }
+      else{
+      hombres = result.rows[0].cantidad;
+      mujeres = 0;
+      }
+      /////////////////////////////////////////////////////////obtener rutinas 
+
+      const script2 = `
+      SELECT
+      rutina.rid,
+      rutina.nombre,
+      COUNT(estadisticas.rid) AS cantidad
+    FROM rutina
+    LEFT JOIN estadisticas ON rutina.rid = estadisticas.rid
+    GROUP BY rutina.rid, rutina.nombre
+    ORDER BY cantidad DESC;
+    
+  `;
+  
+      try {
+        const result = await connection.query(script2);
+     //construir json
+      const datos = {
+      "TotalHombres": parseInt(hombres),
+      "TotalMujeres": parseInt(mujeres),
+      "TotalAciertos": parseInt(aciertos),
+      "TotalErrores": parseInt(errores),
+      "Rutinas": result.rows
+        }
+       console.log(datos);
+
+       res.status(200).json(datos);
+      } catch (error) {
+        console.error('Error de servidor', error);
+        res.status(500).json({ error: 'Ocurrió un error' });
+      }
+  
+      
+    } catch (error) {
+      console.error('Error de servidor', error);
+      res.status(500).json({ error: 'Ocurrió un error' });
+    }
+
+  } catch (error) {
+    console.error('Error de servidor', error);
+    res.status(500).json({ error: 'Ocurrió un error' });
+  }
+
+}
+
+async function GetInfoPaciente(req, res, id) {
+  const script = 'SELECT * FROM paciente WHERE pid = $1';
+
+  try {
+    const result = await connection.query(script, [id]);
+
+    console.log(result.rows[0]);
+      res.status(200).json(result.rows);
+   
+  } catch (error) {
+    console.error('Error de servidor', error);
+    res.status(500).json({ error: 'Ocurrió un error' });
+  }
+}
+
+async function GetInfoMedica(req, res, id) {
+  const script = 'SELECT * FROM infoMedica WHERE pid = $1';
+
+  try {
+    const result = await connection.query(script, [id]);
+
+    console.log(result.rows[0]);
+      res.status(200).json(result.rows);
+   
+  } catch (error) {
+    console.error('Error de servidor', error);
+    res.status(500).json({ error: 'Ocurrió un error' });
+  }
+}
+
+async function GetInfoSocial(req, res, id) {
+  const script = 'SELECT * FROM infoSocial WHERE pid = $1';
+
+  try {
+    const result = await connection.query(script, [id]);
+
+    console.log(result.rows[0]);
+      res.status(200).json(result.rows);
+   
+  } catch (error) {
+    console.error('Error de servidor', error);
+    res.status(500).json({ error: 'Ocurrió un error' });
+  }
+}
 
 module.exports = {
-  AddNewEstadistica, ObtenerEstats, EliminarStats
+  AddNewEstadistica, ObtenerEstats, EliminarStats, DatosParaGraficar, GetInfoPaciente,GetInfoSocial, GetInfoMedica
 }
