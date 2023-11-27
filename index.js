@@ -17,12 +17,49 @@ app.use(session({
 ////////////////////////////////////////////////////////////////////////////////////////// IMPORTS FUNCTIONS
 const globalUID = require('./globalUID'); 
 const {AddNewUser, ObtenerUsuarios, EliminarUsuario, ActualizarUsuario } = require('./Usuarios/functionUsuarios');
-const { AgregarPaciente, GetTablePacientes, EliminarPaciente, EditarPaciente } = require('./Pacientes/functionsPacientes');
+const { AgregarPaciente, GetTablePacientes, EliminarPaciente, EditarPaciente, updatePacienteInfo ,
+  GetTablePacientesSocial, GetTablePacientesMedico, updatePacienteSocial, updatePacienteMedico } = require('./Pacientes/functionsPacientes');
 const { Login, getUID } = require('./Login/functionsLogin');
 
 const {AddNewRutina, ObtenerRutinas, ActualizarRutina, EliminarRutina} = require('./Rutinas/functionRutinas');
 
 const {AddNewEstadistica, ObtenerEstats, EliminarStats, DatosParaGraficar, GetInfoPaciente, GetInfoSocial, GetInfoMedica} = require('./Estadisticas/functionEstadisticas');
+
+// Ruta para actualizar un usuario por UID
+app.put('/api/pacientes/updateMedico/:pid', async (req, res) => {
+  const pid = req.params.pid; // Obtiene el UID de la URL
+  const newData = req.body; // Obtiene los datos actualizados del usuario desde el cuerpo de la solicitud
+  console.log(newData);
+  // Llama a una función para actualizar el usuario
+  updatePacienteMedico(req, res, pid, newData);
+});
+
+// Ruta para actualizar un usuario por UID
+app.put('/api/pacientes/updateSocial/:pid', async (req, res) => {
+  const pid = req.params.pid; // Obtiene el UID de la URL
+  const newData = req.body; // Obtiene los datos actualizados del usuario desde el cuerpo de la solicitud
+  console.log(newData);
+  // Llama a una función para actualizar el usuario
+  updatePacienteSocial(req, res, pid, newData);
+});
+
+app.get('/api/pacientes/social/:pid', async (req, res) => {
+  const pid = req.params.pid;
+  GetTablePacientesSocial(req, res, pid);
+});
+
+app.get('/api/pacientes/medico/:pid', async (req, res) => {
+  const pid = req.params.pid;
+  GetTablePacientesMedico(req, res, pid);
+});
+// Ruta para actualizar un usuario por UID
+app.put('/api/pacientes/update/:pid', async (req, res) => {
+  const pid = req.params.pid; // Obtiene el UID de la URL
+  const newData = req.body; // Obtiene los datos actualizados del usuario desde el cuerpo de la solicitud
+  console.log(newData);
+  // Llama a una función para actualizar el usuario
+  updatePacienteInfo(req, res, pid, newData);
+});
 
 
 // Ruta para agregar una nueva estadística
@@ -160,7 +197,6 @@ app.delete('/api/paciente/delete/:id', async (req, res) => {
 app.put('/api/paciente/edit/:pid', async (req, res) => {
   const pid = req.params.pid; // Obtiene el PID de la URL
   const newData = req.body; // Obtiene los datos actualizados del paciente desde el cuerpo de la solicitud
-  
   // Llama a una función para editar el paciente
   EditarPaciente(req, res, pid, newData);
 });

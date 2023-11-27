@@ -146,6 +146,123 @@ async function GetTablePacientes(req, res, uid) {
 }
 
 
+async function updatePacienteInfo(req, res, pid, newData) {
+  // Realiza la actualización en la tabla "usuarios" utilizando el UID proporcionado
+  const script = 'UPDATE paciente SET Nombre = $1, ApellidoP = $2, ApellidoM = $3, Genero = $4, Direccion = $5, Telefono = $6, FechaIngreso = $7, FechaNacimiento = $8 WHERE PID = $9';
+
+  try {
+    const result = await connection.query(script, [
+
+      newData.nombre,
+      newData.apellidop,
+      newData.apellidom,
+      newData.genero,
+      newData.direccion,
+      newData.telefono,
+      newData.fechaingreso,
+      newData.fechanacimiento,
+      pid
+    ]);
+
+    if (result.rowCount === 1) {
+      // La actualización fue exitosa
+      console.log('paciente actualizado con UID: ' + pid);
+      res.status(200).json({ mensaje: 'Usuario actualizado' });
+    } else {
+      // El usuario con el UID proporcionado no fue encontrado
+      res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+  } catch (error) {
+    console.error('Error de servidor', error);
+    res.status(500).json({ error: 'Ocurrió un error' });
+  }
+}
+
+async function updatePacienteSocial(req, res, pid, newData) {
+  // Realiza la actualización en la tabla "usuarios" utilizando el UID proporcionado
+  const script = 'UPDATE infoSocial SET NivelEducativo = $1, Profesion = $2, EstadoCivil = $3 WHERE PID = $4';
+
+
+  try {
+    const result = await connection.query(script, [
+
+      newData.niveleducativo,
+      newData.profesion,
+      newData.estadocivil,
+      pid
+    ]);
+
+    if (result.rowCount === 1) {
+      // La actualización fue exitosa
+      console.log('paciente actualizado con UID: ' + pid);
+      res.status(200).json({ mensaje: 'Usuario actualizado' });
+    } else {
+      // El usuario con el UID proporcionado no fue encontrado
+      res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+  } catch (error) {
+    console.error('Error de servidor', error);
+    res.status(500).json({ error: 'Ocurrió un error' });
+  }
+}
+
+async function updatePacienteMedico(req, res, pid, newData) {
+  // Realiza la actualización en la tabla "usuarios" utilizando el UID proporcionado
+  const script = 'UPDATE infoMedica SET Enfermedades = $1, Alergias = $2, Antecedentes = $3, Medicamentos = $4 WHERE PID = $5';
+
+
+  try {
+    const result = await connection.query(script, [
+
+      newData.enfermedades,
+      newData.alergias,
+      newData.antecedentes,
+      newData.medicamentos,
+      pid
+    ]);
+
+    if (result.rowCount === 1) {
+      // La actualización fue exitosa
+      console.log('paciente actualizado con UID: ' + pid);
+      res.status(200).json({ mensaje: 'Usuario actualizado' });
+    } else {
+      // El usuario con el UID proporcionado no fue encontrado
+      res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+  } catch (error) {
+    console.error('Error de servidor', error);
+    res.status(500).json({ error: 'Ocurrió un error' });
+  }
+}
+async function GetTablePacientesSocial(req, res, pid) {
+  
+  try {
+    // Modifica la consulta SQL para filtrar por el valor de uid
+    const result = await connection.query('SELECT * FROM infoSocial WHERE pid = $1', [pid]);
+    console.log(result.rows[0]);
+    res.json(result.rows[0]); // Devuelve los datos de la tabla como un JSON
+  } catch (error) {
+    console.error('Error al obtener la tabla de pacientes:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+}
+
+async function GetTablePacientesMedico(req, res, pid) {
+  
+  try {
+    // Modifica la consulta SQL para filtrar por el valor de uid
+    const result = await connection.query('SELECT * FROM infoMedica WHERE pid = $1', [pid]);
+    console.log('Obteniendo pacientes (OK)');
+    console.log(result.rows[0]);
+    res.json(result.rows[0]); // Devuelve los datos de la tabla como un JSON
+  } catch (error) {
+    console.error('Error al obtener la tabla de pacientes:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+}
+
+
+
 module.exports = {
-  AgregarPaciente, GetTablePacientes, EliminarPaciente, EditarPaciente
+  AgregarPaciente, GetTablePacientes, EliminarPaciente, EditarPaciente,updatePacienteInfo, GetTablePacientesSocial, GetTablePacientesMedico,updatePacienteSocial, updatePacienteMedico
 };
