@@ -25,6 +25,16 @@ const {AddNewRutina, ObtenerRutinas, ActualizarRutina, EliminarRutina} = require
 
 const {AddNewEstadistica, ObtenerEstats, EliminarStats, DatosParaGraficar, GetInfoPaciente, GetInfoSocial, GetInfoMedica} = require('./Estadisticas/functionEstadisticas');
 
+// Ruta para actualizar rutinas
+app.put('/api/rutinas/modify/:rid', async (req, res) => {
+  console.log('editando');
+  const rid = req.params.rid; // Obtiene el UID de la URL
+  const newData = req.body; // Obtiene los datos actualizados del usuario desde el cuerpo de la solicitud
+  console.log(newData);
+  // Llama a una función para actualizar el usuario
+  ActualizarRutina(req, res, rid, newData);
+});
+
 // Ruta para actualizar un usuario por UID
 app.put('/api/pacientes/updateMedico/:pid', async (req, res) => {
   const pid = req.params.pid; // Obtiene el UID de la URL

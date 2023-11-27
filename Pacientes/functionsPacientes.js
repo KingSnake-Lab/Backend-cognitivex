@@ -146,6 +146,38 @@ async function GetTablePacientes(req, res, uid) {
 }
 
 
+async function updateRutina(req, res, pid, newData) {
+  // Realiza la actualización en la tabla "usuarios" utilizando el UID proporcionado
+  const script = 'UPDATE paciente SET Nombre = $1, ApellidoP = $2, ApellidoM = $3, Genero = $4, Direccion = $5, Telefono = $6, FechaIngreso = $7, FechaNacimiento = $8 WHERE PID = $9';
+
+  try {
+    const result = await connection.query(script, [
+
+      newData.nombre,
+      newData.apellidop,
+      newData.apellidom,
+      newData.genero,
+      newData.direccion,
+      newData.telefono,
+      newData.fechaingreso,
+      newData.fechanacimiento,
+      pid
+    ]);
+
+    if (result.rowCount === 1) {
+      // La actualización fue exitosa
+      console.log('paciente actualizado con UID: ' + pid);
+      res.status(200).json({ mensaje: 'Usuario actualizado' });
+    } else {
+      // El usuario con el UID proporcionado no fue encontrado
+      res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+  } catch (error) {
+    console.error('Error de servidor', error);
+    res.status(500).json({ error: 'Ocurrió un error' });
+  }
+}
+
 async function updatePacienteInfo(req, res, pid, newData) {
   // Realiza la actualización en la tabla "usuarios" utilizando el UID proporcionado
   const script = 'UPDATE paciente SET Nombre = $1, ApellidoP = $2, ApellidoM = $3, Genero = $4, Direccion = $5, Telefono = $6, FechaIngreso = $7, FechaNacimiento = $8 WHERE PID = $9';

@@ -44,18 +44,17 @@ async function EliminarRutina(req, res, rid) {
   }
 }
 
-async function ActualizarRutina(req, res, rid, newData, propietario) {
-  const script = 'UPDATE rutina SET Nombre = $1, Descripcion = $2, Propietario = $3, Instruccions = $4 WHERE RID = $5';
-
+async function ActualizarRutina(req, res, rid, newData) {
+  const script = 'UPDATE rutina SET Nombre = $1, Descripcion = $2,  Instruccions = $3 WHERE RID = $4';
+  console.log(newData.Nombre);
   try {
     const result = await connection.query(script, [
       
       newData.Nombre,
       newData.Descripcion,
-      propietario,
       newData.Instruccions,
       rid
-        
+      
     ]);
 
     if (result.rowCount === 1) {
